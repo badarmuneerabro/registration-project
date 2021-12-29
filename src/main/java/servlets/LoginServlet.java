@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import helper.Connect;
 
 /**
  * Servlet implementation class LoginServlet
@@ -35,22 +34,28 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		HttpSession session = request.getSession();
-		String login = request.getParameter("action");
+		String action = request.getParameter("action");
+		String username =(String) session.getAttribute("username");
+		System.out.println("action: " + action);
+		System.out.println("username: " + username);
 		
-		
-		if(session.getAttribute("username") != null)
+		if("logout".equals(action))
+		{
+			session.invalidate();
+			response.sendRedirect("login");
+			return;
+		}
+		else if(username != null)
 		{
 			response.sendRedirect("profile");
 			return;
 		}
-		else if("login".equals(login))
+		else if("login".equals(action))
 		{
-			System.out.println("Condition true.");
 			request.setAttribute("loginFailed", false); //login has not failed. user has not enetered credentails till now.
 			request.getRequestDispatcher("/WEB-INF/jsps/view/login.jsp").forward(request, response);
 			return;
 		}
-		
 		else
 		request.getRequestDispatcher("/WEB-INF/jsps/view/register.jsp").forward(request, response);
 	}
@@ -79,27 +84,14 @@ public class LoginServlet extends HttpServlet {
 			return;
 		}
 		
-		Connect connect = Connect.getInstance();
 		
-		PreparedStatement statement = connect.getPreparedStatement("SELECT * FROM USER WHERE USER_NAME=\'" + username + "\' AND PASSWORD=\'" + password + "\';");
-		
-		try 
-		{
-			ResultSet rs = statement.executeQuery();
-			
-			if(!rs.next())
-			{
-				session.setAttribute("loginFailed", true);
-				request.getRequestDispatcher("/WEB-INF/jsps/view/login.jsp").forward(request, response);
-				return;
-			}
-			
-			session.setAttribute("username", username);
-			response.sendRedirect("profile");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		session.setAttribute("username", username);
+		response.sendRedirect("profile");
+		return;
+//		Connect connect = Connect.getInstance();
+//		
+//		PreparedStatement statement = connect.getPreparedStatement("SELECT * FROM USER WHERE USER_NAME=\'" + username + "\' AND PASSWORD=\'" + password + "\';");
+//		
 		
 	}
 

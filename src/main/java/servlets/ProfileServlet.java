@@ -37,7 +37,18 @@ public class ProfileServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		String username = (String)session.getAttribute("username");
-		writer.println("<h1>Welcom " + username + " to my website.</h1>");
+		
+		if(username == null)
+		{
+			response.sendRedirect("login");
+			return;
+		}
+		
+		writer.println("<title>Profile</title>");
+		writer.println("<h1>Welcome " + username + " to my website.</h1>");
+		
+		writer.println("Wanna logout!!");
+		writer.println("<br><br><a href='login?action=logout'>Logout</a>");
 	}
 
 }
