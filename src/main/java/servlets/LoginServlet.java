@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import helper.Connect;
+
 
 /**
  * Servlet implementation class LoginServlet
@@ -36,8 +38,6 @@ public class LoginServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		String action = request.getParameter("action");
 		String username =(String) session.getAttribute("username");
-		System.out.println("action: " + action);
-		System.out.println("username: " + username);
 		
 		if("logout".equals(action))
 		{
@@ -84,15 +84,29 @@ public class LoginServlet extends HttpServlet {
 			return;
 		}
 		
+		Connect connect = Connect.getInstance();
+		
+		PreparedStatement statement = connect.getPreparedStatement("SELECT * FROM USER WHERE USER_NAME=\'" + username + "\' AND PASSWORD=\'" + password + "\';");
+		
+		try 
+		{
+			ResultSet rs = statement.executeQuery();
+			
+			if(!rs.next())
+			{
+				request.setAttribute("loginFailed", true); // Login has failed.
+				request.getRequestDispatcher("/WEB-INF/jsps/view/login.jsp").forward(request, response);
+				return;
+			}
+		} catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		session.setAttribute("username", username);
 		response.sendRedirect("profile");
 		return;
-//		Connect connect = Connect.getInstance();
-//		
-//		PreparedStatement statement = connect.getPreparedStatement("SELECT * FROM USER WHERE USER_NAME=\'" + username + "\' AND PASSWORD=\'" + password + "\';");
-//		
-		
 	}
 
 }
