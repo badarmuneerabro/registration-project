@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
 	{
 		HttpSession session = request.getSession();
 		String action = request.getParameter("action");
-		String username =(String) session.getAttribute("username");
+		String email =(String) session.getAttribute("email");
 		
 		if("logout".equals(action))
 		{
@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 			response.sendRedirect("login");
 			return;
 		}
-		else if(username != null)
+		else if(email != null)
 		{
 			response.sendRedirect("profile");
 			return;
@@ -65,18 +65,18 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		String username = request.getParameter("username");
+		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
 		HttpSession session = request.getSession();
 		
-		if(session.getAttribute("username") != null)
+		if(session.getAttribute("email") != null)
 		{
 			response.sendRedirect("profile");
 			return;
 		}
-		else if(username.isEmpty() || password.isEmpty() ||
-				username == null || password == null
+		else if(email.isEmpty() || password.isEmpty() ||
+				email == null || password == null
 				)
 		{
 			session.setAttribute("loginFailed", true); //now the credentials are not correct.
@@ -86,7 +86,7 @@ public class LoginServlet extends HttpServlet {
 		
 		Connect connect = Connect.getInstance();
 		
-		PreparedStatement statement = connect.getPreparedStatement("SELECT * FROM USER WHERE USER_NAME=\'" + username + "\' AND PASSWORD=\'" + password + "\';");
+		PreparedStatement statement = connect.getPreparedStatement("SELECT * FROM USER WHERE EMAIL=\'" + email + "\' AND PASSWORD=\'" + password + "\';");
 		
 		try 
 		{
@@ -104,7 +104,7 @@ public class LoginServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		session.setAttribute("username", username);
+		session.setAttribute("email", email);
 		response.sendRedirect("profile");
 		return;
 	}

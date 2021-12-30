@@ -13,7 +13,9 @@
 		out.println("<h3>Entered credentails are not correct. please try again.</h2>");
 %>
 <form action="login" method="POST">
-	<input type="text" name="username"><br>
+	<label>Email: </label><br>
+	<input type="email" name="email"><br>
+	<label>Password: </label><br>
 	<input type="password" name="password"><br>
 	<input type="submit" name="submit"><br>
 </form>

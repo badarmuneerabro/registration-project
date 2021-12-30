@@ -36,16 +36,16 @@ public class ProfileServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		
 		HttpSession session = request.getSession();
-		String username = (String)session.getAttribute("username");
+		String email = (String)session.getAttribute("email");
 		
-		if(username == null)
+		if(email == null)
 		{
 			response.sendRedirect("login");
 			return;
 		}
 		
 		writer.println("<title>Profile</title>");
-		writer.println("<h1>Welcome " + username + " to my website.</h1>");
+		writer.println("<h1>Welcome " + email + " to my website.</h1>");
 		
 		writer.println("Wanna logout!!");
 		writer.println("<br><br><a href='login?action=logout'>Logout</a>");
