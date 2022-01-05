@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html"%>
+
+<%
+	Boolean wrongCredentials = (Boolean) session.getAttribute("wrongCredentials");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,6 +56,7 @@ input
 .btn input
 {
 	width: 30%;
+	font-size: 1.5rem;
 }
 
 </style>
@@ -59,16 +64,22 @@ input
 <body>
 	<div class="form">
 		<h2>Registration Form</h2>
-		
-		<form action="login" method="POST">
+		<%
+			if(wrongCredentials != null)
+			{
+			if(wrongCredentials)
+			{
+		%><h2>Credentials you entered are not correct.</h2>
+		<%}} %>
+		<form action="register" method="POST">
 		<label>First Name: </label><br>
-		<input type="text" name="firstName"><br>
+		<input type="text" name="firstName" required><br>
 		<label>Last Name: </label><br>
-		<input type="text" name="lastName"><br>
+		<input type="text" name="lastName" required><br>
 		<label>Email: </label><br>
-		<input type="email" name="email"><br>
+		<input type="email" name="email" required><br>
 		<label>Password: </label><br>
-		<input type="password" name="password"><br>
+		<input type="password" name="password" required><br>
 		
 		<div class="btn">
 			<input type="submit" name="submit"><br>
